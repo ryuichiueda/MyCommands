@@ -34,6 +34,9 @@ def trans(ch,state):
 			bufFlush(False)
 		elif ch == '"':
 			state = quote
+		elif ch == '\\':
+			state = no_esc 
+			buf += '\\\\'
 		else:
 			state = no_esc 
 			buf += ch
@@ -48,6 +51,8 @@ def trans(ch,state):
 			buf = ""
 		elif ch == '"':
 			sys.exit(1)
+		elif ch == '\\':
+			buf += '\\\\'
 		else:
 			buf += ch
 	elif state == quote:
@@ -64,6 +69,8 @@ def trans(ch,state):
 			buf += "\\n"
 		elif ch == '"':
 			state = double_quote
+		elif ch == '\\':
+			buf += '\\\\'
 		else:
 			buf += ch
 	elif state == double_quote:
@@ -81,7 +88,6 @@ def trans(ch,state):
 		else:
 			buf += ch
 			state = no_esc
-	
 
 	return state
 

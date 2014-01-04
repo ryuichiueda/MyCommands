@@ -34,6 +34,12 @@ def trans(ch,state):
 			bufFlush(False)
 		elif ch == '"':
 			state = quote
+		elif ch == ' ':
+			state = no_esc 
+			buf += '_'
+		elif ch == '_':
+			state = no_esc 
+			buf += '\\_'
 		elif ch == '\\':
 			state = no_esc 
 			buf += '\\\\'
@@ -51,6 +57,10 @@ def trans(ch,state):
 			buf = ""
 		elif ch == '"':
 			sys.exit(1)
+		elif ch == ' ':
+			buf += '_'
+		elif ch == '_':
+			buf += '\\_'
 		elif ch == '\\':
 			buf += '\\\\'
 		else:
@@ -69,6 +79,10 @@ def trans(ch,state):
 			buf += "\\n"
 		elif ch == '"':
 			state = double_quote
+		elif ch == ' ':
+			buf += '_'
+		elif ch == '_':
+			buf += '\\_'
 		elif ch == '\\':
 			buf += '\\\\'
 		else:
@@ -97,5 +111,7 @@ if __name__ == "__main__":
 
 	for line in sys.stdin:
 		line = line.decode("utf_8")
+		if line[-1] != '\n':
+			line = line + '\n'
 		for ch in line:
 			state = trans(ch,state)
